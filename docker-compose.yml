@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: database
+    ports:
+      - "5432:5432"
+    volumes:
+      - progressoft-postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: progressoft_database
+      POSTGRES_USER: progressoft_user
+      POSTGRES_PASSWORD: progressoft_password
+
+  progressoft-clustereddata:
+    image: osamanafez/progressoft-clustereddata
+    container_name: progressoft-clustereddata
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/progressoft_database
+      SPRING_DATASOURCE_USERNAME: progressoft_user
+      SPRING_DATASOURCE_PASSWORD: progressoft_password
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+volumes:
+  progressoft-postgres:
